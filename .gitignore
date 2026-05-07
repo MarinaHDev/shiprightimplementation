@@ -36,3 +36,7 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# OS and IDE artifacts
+.DS_Store
+.idea/
