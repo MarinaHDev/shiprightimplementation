@@ -29,7 +29,7 @@ class TrackingSyncJobTest < ActiveJob::TestCase
   test "persists events from the carrier and stamps last_tracking_synced_at" do
     Carrier.gateway = StubGateway.new(events: [
       Carrier::Event.new(carrier_event_id: "e1", occurred_at: 1.hour.ago, status: "in_transit", description: "On its way", location: "Hub"),
-      Carrier::Event.new(carrier_event_id: "e2", occurred_at: 30.minutes.ago, status: "out_for_delivery", description: "Out for delivery", location: "Local"),
+      Carrier::Event.new(carrier_event_id: "e2", occurred_at: 30.minutes.ago, status: "out_for_delivery", description: "Out for delivery", location: "Local")
     ])
 
     assert_difference -> { @order.tracking_events.count }, 2 do

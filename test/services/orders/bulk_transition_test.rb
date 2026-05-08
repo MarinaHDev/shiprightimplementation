@@ -5,7 +5,7 @@ class Orders::BulkTransitionTest < ActiveSupport::TestCase
     eligible = create_list(:order, 3)
     ineligible = create(:order, :delivered)
 
-    summary = Orders::BulkTransition.call(eligible.map(&:id) + [ineligible.id], :approve)
+    summary = Orders::BulkTransition.call(eligible.map(&:id) + [ ineligible.id ], :approve)
 
     assert_equal 4, summary.total
     assert_equal 3, summary.succeeded

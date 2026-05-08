@@ -14,7 +14,7 @@ class Carrier::GatewayTest < ActiveSupport::TestCase
       if @calls <= @failures
         raise @raise_class, "boom"
       end
-      [Carrier::Event.new(carrier_event_id: "1", occurred_at: Time.current, status: "in_transit", description: "ok", location: "Hub")]
+      [ Carrier::Event.new(carrier_event_id: "1", occurred_at: Time.current, status: "in_transit", description: "ok", location: "Hub") ]
     end
   end
 
@@ -69,7 +69,7 @@ class Carrier::GatewayTest < ActiveSupport::TestCase
   test "rejects malformed events at the boundary" do
     bad_client = Class.new do
       define_method(:fetch_events) do |tracking_number:|
-        [Carrier::Event.new(carrier_event_id: nil, occurred_at: Time.current, status: "x", description: nil, location: nil)]
+        [ Carrier::Event.new(carrier_event_id: nil, occurred_at: Time.current, status: "x", description: nil, location: nil) ]
       end
     end.new
 

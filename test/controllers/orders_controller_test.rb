@@ -64,7 +64,7 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
 
   test "sync_tracking enqueues the job" do
     order = create(:order, :shipped)
-    assert_enqueued_with(job: TrackingSyncJob, args: [order.id]) do
+    assert_enqueued_with(job: TrackingSyncJob, args: [ order.id ]) do
       post sync_tracking_order_path(order)
     end
     assert_redirected_to order

@@ -58,16 +58,16 @@ class OrderTest < ActiveSupport::TestCase
     history = order.audit_history
     status_changes = history.filter_map { |h| h.changes["status"] }
 
-    assert_equal [["pending", "approved"], ["approved", "shipped"]], status_changes
+    assert_equal [ [ "pending", "approved" ], [ "approved", "shipped" ] ], status_changes
     assert_equal "tester@example.com", history.last.whodunnit
   end
 
   test "available_events reflects the current state" do
     order = create(:order)
-    assert_equal [:approve, :cancel].sort, order.available_events.sort
+    assert_equal [ :approve, :cancel ].sort, order.available_events.sort
 
     order.approve!
-    assert_equal [:ship, :cancel].sort, order.available_events.sort
+    assert_equal [ :ship, :cancel ].sort, order.available_events.sort
   end
 
   test "total sums line item subtotals" do

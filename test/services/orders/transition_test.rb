@@ -31,7 +31,7 @@ class Orders::TransitionTest < ActiveSupport::TestCase
   test "enqueues a tracking sync after a successful ship" do
     order = create(:order, :approved)
 
-    assert_enqueued_with(job: TrackingSyncJob, args: [order.id]) do
+    assert_enqueued_with(job: TrackingSyncJob, args: [ order.id ]) do
       Orders::Transition.call(order, :ship)
     end
   end

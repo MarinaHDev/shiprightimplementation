@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :transition, :sync_tracking]
+  before_action :set_order, only: [ :show, :transition, :sync_tracking ]
 
   def index
     @status = params[:status].presence

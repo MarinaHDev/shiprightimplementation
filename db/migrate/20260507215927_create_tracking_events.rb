@@ -11,7 +11,7 @@ class CreateTrackingEvents < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
-    add_index :tracking_events, [:order_id, :carrier_event_id], unique: true
+    add_index :tracking_events, [ :order_id, :carrier_event_id ], unique: true
     add_index :tracking_events, :occurred_at
   end
 end

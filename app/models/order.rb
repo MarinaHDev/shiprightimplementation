@@ -18,7 +18,7 @@ class Order < ApplicationRecord
   validates :shipping_address, presence: true
   validates :status, presence: true
 
-  audited only: [:status]
+  audited only: [ :status ]
 
   STATUSES = %w[pending approved shipped delivered cancelled].freeze
 
@@ -44,7 +44,7 @@ class Order < ApplicationRecord
     end
 
     event :cancel do
-      transitions from: [:pending, :approved, :shipped], to: :cancelled,
+      transitions from: [ :pending, :approved, :shipped ], to: :cancelled,
                   after: :record_cancellation
     end
   end

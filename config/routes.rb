@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :orders, only: [:index, :show] do
+  resources :orders, only: [ :index, :show ] do
     member do
       post :transition
       post :sync_tracking
