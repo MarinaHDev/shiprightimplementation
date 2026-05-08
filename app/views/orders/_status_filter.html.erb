@@ -1,0 +1,9 @@
+<%
+  active = (status == current) || (status.nil? && current.nil?)
+  base = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm transition-colors"
+  classes = active ? "#{base} bg-slate-900 text-white border-slate-900" : "#{base} bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+%>
+<%= link_to orders_path(status: status), class: classes do %>
+  <span><%= label %></span>
+  <span class="<%= active ? "text-white/80" : "text-slate-400" %>"><%= count %></span>
+<% end %>

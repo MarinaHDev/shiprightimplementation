@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= content_for(:title) || "Ship Right Implementation" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Ship Right Implementation">
-    <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title><%= content_for(:title) || "Shipright" %></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Shipright">
+  <meta name="mobile-web-app-capable" content="yes">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= yield :head %>
+  <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.png">
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+<header class="bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <%= link_to root_path, class: "flex items-center gap-2 font-semibold text-slate-900 hover:text-slate-700" do %>
+      <span class="text-lg">ShipRight</span>
+      <span class="text-xs text-slate-500 uppercase tracking-wide">Operations</span>
+    <% end %>
+    <% if Current.user %>
+      <div class="flex items-center gap-4 text-sm">
+        <span class="text-slate-600">Signed in as <span class="font-medium text-slate-900"><%= Current.user.display_name %></span></span>
+        <%= button_to "Sign out", session_path, method: :delete,
+                      class: "text-slate-600 hover:text-slate-900 underline underline-offset-2",
+                      form: { class: "inline" } %>
+      </div>
+    <% end %>
+  </div>
+</header>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
-  </body>
+<% if notice.present? %>
+  <div class="max-w-7xl mx-auto px-6 mt-4">
+    <div class="rounded-md bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800"><%= notice %></div>
+  </div>
+<% end %>
+<% if alert.present? %>
+  <div class="max-w-7xl mx-auto px-6 mt-4">
+    <div class="rounded-md bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800"><%= alert %></div>
+  </div>
+<% end %>
+
+<main class="max-w-7xl mx-auto px-6 py-8">
+  <%= yield %>
+</main>
+</body>
 </html>

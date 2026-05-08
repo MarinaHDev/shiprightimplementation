@@ -1,0 +1,87 @@
+<% content_for :title, "Orders" %>
+
+<div class="flex items-baseline justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-slate-900">Orders</h1>
+    <p class="text-sm text-slate-500 mt-1">All <%= Order.count %> orders, oldest staff first.</p>
+  </div>
+</div>
+
+<nav class="flex flex-wrap gap-2 mb-6 text-sm" aria-label="Filter by status">
+  <%= render "status_filter", label: "All", count: Order.count, status: nil, current: @status %>
+  <% Order::STATUSES.each do |status| %>
+    <%= render "status_filter", label: status.titleize, count: @counts[status].to_i, status: status, current: @status %>
+  <% end %>
+</nav>
+
+<%= form_with url: bulk_transition_orders_path, method: :post, local: true,
+              data: { controller: "bulk-select", "bulk-select-target": "form" },
+              class: "bg-white border border-slate-200 rounded-lg shadow-sm" do |form| %>
+  <%= form.hidden_field :status, value: @status %>
+
+  <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-slate-200 bg-slate-50 rounded-t-lg">
+    <div class="flex items-center gap-2 text-sm text-slate-600">
+      <span data-bulk-select-target="counter">0 selected</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= form.select :event,
+            options_for_select([
+              ["Bulk action…", ""],
+              ["Approve",       "approve"],
+              ["Mark shipped",  "ship"],
+              ["Mark delivered","deliver"],
+              ["Cancel",        "cancel"]
+            ]),
+            {},
+            class: "rounded-md border-slate-300 text-sm py-1.5 pr-8 pl-2",
+            data: { "bulk-select-target": "event", action: "bulk-select#refresh" } %>
+
+      <%= form.submit "Apply",
+            class: "rounded-md bg-slate-900 text-white text-sm font-medium px-3 py-1.5 disabled:opacity-40 disabled:cursor-not-allowed",
+            data: { "bulk-select-target": "submit" },
+            disabled: true %>
+    </div>
+  </div>
+
+  <% if @orders.any? %>
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500 border-b border-slate-200">
+        <tr>
+          <th class="px-4 py-2 w-10">
+            <input type="checkbox" data-bulk-select-target="selectAll" data-action="bulk-select#toggleAll" class="rounded border-slate-300">
+          </th>
+          <th class="px-4 py-2">Order</th>
+          <th class="px-4 py-2">Customer</th>
+          <th class="px-4 py-2">Status</th>
+          <th class="px-4 py-2">Items</th>
+          <th class="px-4 py-2 text-right">Total</th>
+          <th class="px-4 py-2">Placed</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        <% @orders.each do |order| %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3">
+              <%= check_box_tag "order_ids[]", order.id, false,
+                    data: { "bulk-select-target": "checkbox", action: "bulk-select#refresh" },
+                    class: "rounded border-slate-300" %>
+            </td>
+            <td class="px-4 py-3 font-mono text-xs">
+              <%= link_to order.number, order, class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+            </td>
+            <td class="px-4 py-3">
+              <div class="font-medium text-slate-900"><%= order.customer_name %></div>
+              <div class="text-slate-500 text-xs"><%= order.customer_email %></div>
+            </td>
+            <td class="px-4 py-3"><%= render "status_badge", status: order.status %></td>
+            <td class="px-4 py-3 text-slate-600"><%= pluralize(order.line_items.size, "item") %></td>
+            <td class="px-4 py-3 text-right font-medium tabular-nums">$<%= number_with_precision(order.total, precision: 2) %></td>
+            <td class="px-4 py-3 text-slate-500 text-xs"><%= time_ago_in_words(order.created_at) %> ago</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="px-4 py-12 text-center text-slate-500 text-sm">No orders match this filter.</div>
+  <% end %>
+<% end %>
